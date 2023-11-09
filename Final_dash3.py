@@ -112,8 +112,6 @@ class YFinance:
         return ret
 
 
-
-
 #==============================================================================
 # Header
 #==============================================================================
@@ -122,8 +120,7 @@ def render_header():
     """
     This function render the header of the dashboard with the following items:
         - Title
-        - Dashboard description
-        - 3 selection boxes to select: Ticker, Start Date, End Date
+        
     """
     
     # Add dashboard title and description
@@ -147,6 +144,11 @@ def render_header():
     start_date = col2.date_input("Start date", datetime.today().date() - timedelta(days=30))
     end_date = col3.date_input("End date", datetime.today().date())
     
+    # Update button
+    if st.button('Update Data'):
+        # This is where you'll call the function to fetch and update the stock data
+        # For example: fetch_and_update_data(ticker, start_date, end_date)
+        st.success('Stock data updated!')
 
 #==============================================================================
 # Tab 1
@@ -182,6 +184,8 @@ def render_tab1():
         selected_time = st.selectbox("Select Time Duration:", list(time_options.keys()))
     
         stock_data = fetch_stock_data(ticker, time_options[selected_time])
+        
+        
         st.line_chart(stock_data)
         
         
@@ -241,7 +245,15 @@ def render_tab2():
 
         # Time interval selector
         st.subheader("Select Time Interval")
-        interval = st.selectbox("", ["1d", "5d", "1wk", "1mo", "3mo"])
+       
+        interval_options = {
+            "Day": "1d",
+            "Month": "1mo",
+            "Year": "1y"}
+        
+        # Create selection box for interval
+        interval_label = st.selectbox("", list(interval_options.keys()))
+        interval = interval_options[interval_label]
     
         # Plot type selector
         st.subheader("Select Plot Type")
@@ -452,7 +464,7 @@ def render_tab5():
 render_header()
 
 # Render the tabs
-tab1, tab2, tab3, tab4, tab5 = st.tabs(["Summary", "Chart", "Financial Statements", "Monte Carlo simulation", "Own Analysis" ])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["Summary", "Chart", "Financial Statements", "Monte Carlo Simulation", "Own Analysis" ])
 
 with tab1:
     render_tab1()
